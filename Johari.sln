@@ -9,12 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Johari", "Johari\Johari.csp
 		{29B0F9F6-9BE9-4086-9F29-52149A03FBB5} = {29B0F9F6-9BE9-4086-9F29-52149A03FBB5}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure1\Infrastructure.csproj", "{A8683D94-966F-46EB-B52B-DD13AF7FF81A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure1\Infrastructure.csproj", "{A8683D94-966F-46EB-B52B-DD13AF7FF81A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{29B0F9F6-9BE9-4086-9F29-52149A03FBB5} = {29B0F9F6-9BE9-4086-9F29-52149A03FBB5}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationCore", "ApplicationCore1\ApplicationCore.csproj", "{29B0F9F6-9BE9-4086-9F29-52149A03FBB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplicationCore", "ApplicationCore1\ApplicationCore.csproj", "{29B0F9F6-9BE9-4086-9F29-52149A03FBB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
