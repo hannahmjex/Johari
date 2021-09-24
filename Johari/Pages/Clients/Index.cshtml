@@ -7,30 +7,39 @@
 
 <h1>Responses</h1>
 
-<div class="boarder backgroundWhite container">
-    <table id="DT_load" class="table table-striped table-bordered">
-        <thead>
+<form method="post">
+    <div class="boarder backgroundWhite container">
+        <table>
+            <tr><th>Checkboxes</th><th>Adjectives</th></tr>
             <tr>
-                <th>
-                    <!--empty for checkboxes-->
-                </th>
-                <th>
-                    Adjective
-                </th>
-                <th>
-                    Description
-                </th>
-                <th>
-                    Positive/Negative
-                </th>
+
+                @{
+                    for (int i = 0; i < Model.Adjectives.Count(); i++)
+                    {
+                        <td>
+                            <input asp-for="@Model.Adjectives[i].Value" type="hidden" />
+                            <input asp-for="@Model.Adjectives[i].Text" type="hidden" />
+                            <input asp-for="@Model.Adjectives[i].Selected" />
+                        </td>
+                        <td>
+                           @Model.Adjectives[i].Text
+                        </td>
+                        //
+                        //       string description = Model.Adjectives[i].Text.ToString();
+                        //       string[] descriptions = description.Split(' ');
+                        //       for (int j = 0; i < descriptions.Length; j++)
+                        //       {
+                        //           <td>
+                        //               descriptions[j];
+                        //           </td>
+                        //       }
+
+                    }
+
+                }
+
             </tr>
-        </thead>
-
-    </table>
-</div>
-
-@section Scripts
-{
-    <script src="~/js/adjectives.js"></script>
-}
+        </table>
+    </div>
+</form>
 
