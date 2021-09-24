@@ -11,18 +11,10 @@ namespace Johari.Pages.Clients
 {
     public class IndexModel : PageModel
     {
-        private readonly Infrastructure.Data.ApplicationDbContext _context;
-
-        public IndexModel(Infrastructure.Data.ApplicationDbContext context)
+        public void OnGet()
         {
-            _context = context;
-        }
 
-        public IList<Client> Client { get;set; }
-
-        public async Task OnGetAsync()
-        {
-            Client = (IList<Client>)await _context.Client.ToListAsync();
         }
+            
     }
 }

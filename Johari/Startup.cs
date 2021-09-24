@@ -95,10 +95,8 @@ namespace Johari
 
 			app.UseAuthorization();
 
-			app.UseEndpoints(endpoints =>
-			{
-				endpoints.MapRazorPages();
-			});
+			app.UseMvc();
+		
 		}
 	}
 }
