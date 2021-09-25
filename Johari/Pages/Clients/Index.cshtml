@@ -1,45 +1,57 @@
 ﻿@page
+
 @model Johari.Pages.Clients.IndexModel
+@using ApplicationCore.Models
+
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
 <h1>Responses</h1>
 
 <form method="post">
-    <div class="boarder backgroundWhite container">
-        <table>
-            <tr><th>Checkboxes</th><th>Adjectives</th></tr>
-            <tr>
+	<div class="backgroundWhite container">
+		<table cellpadding="5" class="table table-bordered" id="clientResponseTable">
+			<tr>
+				<th></th>
+				<th>Adjectives</th>
+				<th>Description</th>
+				<th>Adjective Type</th>
+			</tr>
+			<tr>
+				@{
+					for (int i = 0; i < Model.Adjectives.Count(); i++)
+					{
+					<tr>
+						<td>
+							@*Checkbox*@
+							<input asp-for="@Model.Adjectives[i].Value" type="hidden" />
+							<input asp-for="@Model.Adjectives[i].Text" type="hidden" />
+							<input asp-for="@Model.Adjectives[i].Selected" id="checkbox"/>
+						</td>
 
-                @{
-                    for (int i = 0; i < Model.Adjectives.Count(); i++)
-                    {
-                        <td>
-                            <input asp-for="@Model.Adjectives[i].Value" type="hidden" />
-                            <input asp-for="@Model.Adjectives[i].Text" type="hidden" />
-                            <input asp-for="@Model.Adjectives[i].Selected" />
-                        </td>
-                        <td>
-                           @Model.Adjectives[i].Text
-                        </td>
-                        //
-                        //       string description = Model.Adjectives[i].Text.ToString();
-                        //       string[] descriptions = description.Split(' ');
-                        //       for (int j = 0; i < descriptions.Length; j++)
-                        //       {
-                        //           <td>
-                        //               descriptions[j];
-                        //           </td>
-                        //       }
+						@{
+							string[] adj = Model.Adjectives[i].Text.ToString().Split('+');
+							for (int j = 0; j < adj.Length; j++)
+							{
+								//change adjtype to pos or neg instead of true or false
+								adj[j] = adj[j] == "False" ? "Negative" : adj[j] == "True" ? "Positive" : adj[j];
 
-                    }
+								<td>
+									@adj[j]
+								</td>
+							}
+						}
+					</tr>
+					}
+				}
+				<tr />
+			</table>
+		<button type="submit" class="col-2 btn btn-primary form-control">Submit</button>
+		</div>
 
-                }
+	</form>
 
-            </tr>
-        </table>
-    </div>
-</form>
+	
 

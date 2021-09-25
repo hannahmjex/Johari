@@ -11,28 +11,79 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Johari.Pages.Clients
 {
-    public class IndexModel : PageModel
-    {
-        private readonly IUnitofWork _unitofWork;
-        public IndexModel(IUnitofWork unitofWork)
-        {
-            _unitofWork = unitofWork;
-        }
+	public class IndexModel : PageModel
+	{
+		private readonly IUnitofWork _unitofWork;
 
-        [BindProperty]
-        public IList<SelectListItem> Adjectives { get; set; }
+		public ClientResponsesVM ClientResponseObj;
+
+        public string SelectedAdjectives { get; set; }
+
+		public string SelectedAdjectivesID { get; set; }
+
+		[BindProperty]
+		public Adjective AdjectiveObj { get; set; }
+
+		public Client clientObj { get; set; }
+
+		public IndexModel(IUnitofWork unitofWork)
+		{
+			_unitofWork = unitofWork;
+		}
+
+		[BindProperty]
+		public IList<SelectListItem> Adjectives { get; set; }
 
 
-        public void OnGet()
-        {
-            List<Adjective> AdjectiveList = new List<Adjective>();
-            AdjectiveList = (List<Adjective>)_unitofWork.Adjective.List();
-            Adjectives = AdjectiveList.ToList<Adjective>()
-                .Select(c => new SelectListItem { Text = c.AdjName + " " +c.AdjDefinition, Value = c.AdjectiveID.ToString() })
-                .ToList<SelectListItem>();
-        }
+		public void OnGet()
+		{
+			var clientsList = _unitofWork.Client.List();
+			var adjectivesList = _unitofWork.Adjective.List();
+
+			List<Adjective> AdjectiveList = new List<Adjective>();
+			AdjectiveList = (List<Adjective>)_unitofWork.Adjective.List();
+			Adjectives = AdjectiveList.ToList<Adjective>()
+				.Select(c => new SelectListItem { Text = c.AdjName + "+" + c.AdjDefinition + "+" + c.AdjType, Value = c.AdjectiveID.ToString() })
+				.ToList<SelectListItem>();
+
+			//trying adding obj
+			ClientResponseObj = new ClientResponsesVM
+			{
+				ClientResponses = new ClientResponses(),
+				ClientList = clientsList.Select(c => new SelectListItem { Value = c.ClientID.ToString() }),
+				AdjectiveList = adjectivesList.Select(f => new SelectListItem { Value = f.AdjectiveID.ToString()})
+			};
+		
+
+		}
+
+		public IActionResult OnPost()
+		{
+			if (!ModelState.IsValid)
+			{
+				return Page();
+			}
+
+			List<Adjective> AdjectiveList = new List<Adjective>();
+			
+
+			//if boxes are checked add them to table
+			foreach (SelectListItem Adjective in Adjectives)
+			{
+				if (Adjective.Selected)
+				{
+					SelectedAdjectivesID = $"{Adjective.Value},{SelectedAdjectivesID}";
+
+				}
+			}
 
 
-            
-    }
+
+			
+			_unitofWork.Commit();
+
+			return RedirectToPage("./Index");
+		}
+
+	}
 }
