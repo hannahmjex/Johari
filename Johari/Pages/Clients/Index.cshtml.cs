@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ApplicationCore.Models;
 using ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Identity;
 
 namespace Johari.Pages.Clients
 {
@@ -29,6 +30,9 @@ namespace Johari.Pages.Clients
 		public IndexModel(IUnitofWork unitofWork)
 		{
 			_unitofWork = unitofWork;
+			//harded right now to make the page load
+			clientObj = new Client();
+			clientObj.ClientID = 1;
 		}
 
 		[BindProperty]
@@ -37,6 +41,8 @@ namespace Johari.Pages.Clients
 
 		public void OnGet()
 		{
+			
+				
 			var clientsList = _unitofWork.Client.List();
 			var adjectivesList = _unitofWork.Adjective.List();
 
@@ -47,12 +53,12 @@ namespace Johari.Pages.Clients
 				.ToList<SelectListItem>();
 
 			//trying adding obj
-			ClientResponseObj = new ClientResponsesVM
-			{
-				ClientResponses = new ClientResponses(),
-				ClientList = clientsList.Select(c => new SelectListItem { Value = c.ClientID.ToString() }),
-				AdjectiveList = adjectivesList.Select(f => new SelectListItem { Value = f.AdjectiveID.ToString()})
-			};
+			//ClientResponseObj = new ClientResponsesVM
+			//{
+			//	ClientResponses = new ClientResponses(),
+			//	ClientList = clientsList.Select(c => new SelectListItem { Value = c.ClientID.ToString() }),
+			//	AdjectiveList = adjectivesList.Select(f => new SelectListItem { Value = f.AdjectiveID.ToString()})
+			//};
 		
 
 		}
