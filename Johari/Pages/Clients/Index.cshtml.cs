@@ -16,12 +16,6 @@ namespace Johari.Pages.Clients
 	{
 		private readonly IUnitofWork _unitofWork;
 
-		public ClientResponsesVM ClientResponseObj;
-
-        public string SelectedAdjectives { get; set; }
-
-		public string SelectedAdjectivesID { get; set; }
-
 		[BindProperty]
 		public Adjective AdjectiveObj { get; set; }
 
@@ -32,7 +26,7 @@ namespace Johari.Pages.Clients
 			_unitofWork = unitofWork;
 			//harded right now to make the page load
 			clientObj = new Client();
-			clientObj.ClientID = 1;
+			clientObj.ClientID = 2;
 		}
 
 		[BindProperty]
@@ -40,9 +34,7 @@ namespace Johari.Pages.Clients
 
 
 		public void OnGet()
-		{
-			
-				
+		{				
 			var clientsList = _unitofWork.Client.List();
 			var adjectivesList = _unitofWork.Adjective.List();
 
@@ -51,16 +43,6 @@ namespace Johari.Pages.Clients
 			Adjectives = AdjectiveList.ToList<Adjective>()
 				.Select(c => new SelectListItem { Text = c.AdjName + "+" + c.AdjDefinition + "+" + c.AdjType, Value = c.AdjectiveID.ToString() })
 				.ToList<SelectListItem>();
-
-			//trying adding obj
-			//ClientResponseObj = new ClientResponsesVM
-			//{
-			//	ClientResponses = new ClientResponses(),
-			//	ClientList = clientsList.Select(c => new SelectListItem { Value = c.ClientID.ToString() }),
-			//	AdjectiveList = adjectivesList.Select(f => new SelectListItem { Value = f.AdjectiveID.ToString()})
-			//};
-		
-
 		}
 
 		public IActionResult OnPost()
@@ -70,22 +52,16 @@ namespace Johari.Pages.Clients
 				return Page();
 			}
 
-			List<Adjective> AdjectiveList = new List<Adjective>();
-			
-
 			//if boxes are checked add them to table
 			foreach (SelectListItem Adjective in Adjectives)
 			{
 				if (Adjective.Selected)
 				{
-					SelectedAdjectivesID = $"{Adjective.Value},{SelectedAdjectivesID}";
-
+					_unitofWork.ClientResponses.Add(new ClientResponses { AdjectiveID = Int32.Parse(Adjective.Value), ClientID = clientObj.ClientID });
+					
 				}
 			}
 
-
-
-			
 			_unitofWork.Commit();
 
 			return RedirectToPage("./Index");
