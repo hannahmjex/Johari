@@ -31,6 +31,8 @@ namespace Johari.Pages.Clients
                 .Select(c => new SelectListItem { Text = c.AdjName + " " +c.AdjDefinition, Value = c.AdjectiveID.ToString() })
                 .ToList<SelectListItem>();
         }
+
+
             
     }
 }
