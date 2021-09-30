@@ -1,0 +1,22 @@
+﻿@page
+@model Johari.Pages.Friends.IndexModel
+@using ApplicationCore.Models
+
+
+@{
+}
+
+<!-- check for exiting client id and add radiobutton(one choice) for "role" friend, parent, child etc-->'
+
+<form method="post">
+    <div class="backgroundWhite container">
+        <input id="clientid" class="form-control"  />
+        <label for="clientid">Clients ID</label>
+        <input type="radio" id="friend" name="friend" value="friend">
+        <label for="friend">Friend</label><br>
+        <input type="radio" id="parent" name="parent" value="parent">
+        <label for="parent">Parent</label><br>
+        <input type="radio" id="child" name="child" value="child">
+        <label for="child">Child</label>
+    </div>
+</form>
