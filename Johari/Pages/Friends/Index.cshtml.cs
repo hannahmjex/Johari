@@ -14,23 +14,37 @@ namespace Johari.Pages.Friends
     {
         private readonly IUnitofWork _unitofwork;
 
-        public Client Client { get; set; }
+        public Friend FriendObj { get; set; }
+        public Client ClientObj { get; set; }
 
         public IndexModel(IUnitofWork unitofWork)
         {
             _unitofwork = unitofWork;
+            ClientObj = new Client();
+            FriendObj = new Friend();
+
         }
         public void OnGet()
         {
-            var claimsIdentity = (ClaimsIdentity)this.User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+           
+        }
 
-            /*
-            Client = new Client()
+        public IActionResult OnPost()
+        {
+            //if client id is verified from clientDB redirect to /FriendResponse
+            List<Client> clients = new List<Client>();
+            var clientsList = _unitofwork.Client.List();
+            clients = (List<Client>)clientsList;
+
+            foreach(Client c in clients)
             {
-                ClientID = Int32.Parse(claim.Value)
-            };
-            */
+                if(c.ClientID==ClientObj.ClientID)
+                {
+                    _unitofwork.Friend.Add(new Friend {HowLong = FriendObj.HowLong, Relationship = FriendObj.Relationship });
+                    return RedirectToPage("./Friend/FriendResponse");
+                }
+            }
+            return Page();
 
         }
     }

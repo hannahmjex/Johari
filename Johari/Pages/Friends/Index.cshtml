@@ -8,15 +8,48 @@
 
 <!-- check for exiting client id and add radiobutton(one choice) for "role" friend, parent, child etc-->'
 
-<form method="post">
-    <div class="backgroundWhite container">
-        <input id="clientid" class="form-control"  />
-        <label for="clientid">Clients ID</label>
-        <input type="radio" id="friend" name="friend" value="friend">
-        <label for="friend">Friend</label><br>
-        <input type="radio" id="parent" name="parent" value="parent">
-        <label for="parent">Parent</label><br>
-        <input type="radio" id="child" name="child" value="child">
-        <label for="child">Child</label>
+<form method="post" asp-action="Index">
+    <div class="container">
+        <div class="row px-2 mx-2 backgroundWhite border">
+            <div asp-validation-summary="All" class=" text-danger"></div>
+            <div class="col-12 px-3" style="border-bottom:1px solid #325d88">
+                <h2 class="text-primary">New Friend</h2>
+            </div>
+            <div class="col-8 pt-3">
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="ClientObj.ClientID"></label>
+                    </div>
+                    <div class="col-9">
+                        <input class="form-control" asp-for="ClientObj.ClientID" />
+                        <span class="text-danger" asp-validation-for="ClientObj.ClientID"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-8 pt-3">
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="FriendObj.Relationship"></label>
+                    </div>
+                    <div class="col-9">
+                        <input class="form-control" asp-for="FriendObj.Relationship" />
+                        <span class="text-danger" asp-validation-for="FriendObj.Relationship"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-8 pt-3">
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label asp-for="FriendObj.HowLong"></label>
+                    </div>
+                    <div class="col-9">
+                        <input class="form-control" asp-for="FriendObj.HowLong" />
+                        <span class="text-danger" asp-validation-for="FriendObj.HowLong"></span>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary form-control">Submit</button>
+        </div>   
     </div>
+  
 </form>
