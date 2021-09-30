@@ -14,7 +14,10 @@ namespace Johari.Pages.Friends
     {
         private readonly IUnitofWork _unitofwork;
 
+        [BindProperty]
         public Friend FriendObj { get; set; }
+
+        [BindProperty]
         public Client ClientObj { get; set; }
 
         public IndexModel(IUnitofWork unitofWork)
@@ -22,13 +25,7 @@ namespace Johari.Pages.Friends
             _unitofwork = unitofWork;
             ClientObj = new Client();
             FriendObj = new Friend();
-
         }
-        public void OnGet()
-        {
-           
-        }
-
         public IActionResult OnPost()
         {
             //if client id is verified from clientDB redirect to /FriendResponse
@@ -41,9 +38,13 @@ namespace Johari.Pages.Friends
                 if(c.ClientID==ClientObj.ClientID)
                 {
                     _unitofwork.Friend.Add(new Friend {HowLong = FriendObj.HowLong, Relationship = FriendObj.Relationship });
-                    return RedirectToPage("./Friend/FriendResponse");
+                    _unitofwork.Commit();
+                    
+                    return RedirectToPage("./FriendResponse");
                 }
             }
+
+          
             return Page();
 
         }
