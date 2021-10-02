@@ -92,8 +92,7 @@ namespace Johari.Areas.Identity.Pages.Account
                     Email = Input.Email,
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
-                //var current_User = await _userManager.GetUserAsync(HttpContext.User);
-                var current_User = user.Id;
+                var current_UserId = user.Id;
 
                 var client = new Client
                 {
@@ -101,7 +100,7 @@ namespace Johari.Areas.Identity.Pages.Account
                     LastName = Input.LastName,
                     DOB = Input.DOB,
                     Gender = Input.Gender,
-                    //ASPNETUserID = current_User
+                    ASPNETUserID = current_UserId
                 };
                 _dbContext.Add(client);
                 _dbContext.SaveChanges();

@@ -20,11 +20,15 @@ namespace Johari.Pages.Friends
         [BindProperty]
         public Client ClientObj { get; set; }
 
+        [BindProperty]
+        public bool ClientExists { get; set; }
+
         public IndexModel(IUnitofWork unitofWork)
         {
             _unitofwork = unitofWork;
             ClientObj = new Client();
             FriendObj = new Friend();
+            ClientExists = true;
         }
         public IActionResult OnPost()
         {
@@ -33,16 +37,19 @@ namespace Johari.Pages.Friends
             var clientsList = _unitofwork.Client.List();
             clients = (List<Client>)clientsList;
 
-            foreach(Client c in clients)
+            foreach (Client c in clients)
             {
                 if(c.ClientID==ClientObj.ClientID)
                 {
                     _unitofwork.Friend.Add(new Friend {HowLong = FriendObj.HowLong, Relationship = FriendObj.Relationship });
                     _unitofwork.Commit();
                     
+                    ClientExists = true;
                     return RedirectToPage("./FriendResponse");
                 }
             }
+
+            ClientExists = false;
 
           
             return Page();

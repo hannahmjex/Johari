@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Migrations
 {
-    public partial class IdentityUser : Migration
+    public partial class Inital : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -77,32 +77,6 @@ namespace Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Friend", x => x.FriendID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ClientResponses",
-                columns: table => new
-                {
-                    ResponseID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AdjectiveID = table.Column<int>(type: "int", nullable: false),
-                    ClientID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ClientResponses", x => x.ResponseID);
-                    table.ForeignKey(
-                        name: "FK_ClientResponses_Adjectives_AdjectiveID",
-                        column: x => x.AdjectiveID,
-                        principalTable: "Adjectives",
-                        principalColumn: "AdjectiveID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ClientResponses_Client_ClientID",
-                        column: x => x.ClientID,
-                        principalTable: "Client",
-                        principalColumn: "ClientID",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -212,6 +186,55 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Client",
+                columns: table => new
+                {
+                    ClientID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DOB = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ASPNETUserID = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Client", x => x.ClientID);
+                    table.ForeignKey(
+                        name: "FK_Client_AspNetUsers_ASPNETUserID",
+                        column: x => x.ASPNETUserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ClientResponses",
+                columns: table => new
+                {
+                    ResponseID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AdjectiveID = table.Column<int>(type: "int", nullable: false),
+                    ClientID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ClientResponses", x => x.ResponseID);
+                    table.ForeignKey(
+                        name: "FK_ClientResponses_Adjectives_AdjectiveID",
+                        column: x => x.AdjectiveID,
+                        principalTable: "Adjectives",
+                        principalColumn: "AdjectiveID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ClientResponses_Client_ClientID",
+                        column: x => x.ClientID,
+                        principalTable: "Client",
+                        principalColumn: "ClientID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "FriendResponses",
                 columns: table => new
                 {
@@ -284,6 +307,11 @@ namespace Infrastructure.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Client_ASPNETUserID",
+                table: "Client",
+                column: "ASPNETUserID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ClientResponses_AdjectiveID",
                 table: "ClientResponses",
                 column: "AdjectiveID");
@@ -336,13 +364,16 @@ namespace Infrastructure.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Adjectives");
 
             migrationBuilder.DropTable(
+                name: "Client");
+
+            migrationBuilder.DropTable(
                 name: "Friend");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

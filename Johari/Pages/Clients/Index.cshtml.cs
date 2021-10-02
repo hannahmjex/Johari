@@ -9,6 +9,7 @@ using ApplicationCore.Models;
 using ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace Johari.Pages.Clients
 {
@@ -16,26 +17,21 @@ namespace Johari.Pages.Clients
 	{
 		private readonly IUnitofWork _unitofWork;
 
-		[BindProperty]
-		public Adjective AdjectiveObj { get; set; }
-
 		public Client clientObj { get; set; }
+		public ClientResponses clientResponseObj { get; set; }
 
 		public IndexModel(IUnitofWork unitofWork)
 		{
 			_unitofWork = unitofWork;
-			//harded right now to make the page load
-			clientObj = new Client();
-			clientObj.ClientID = 2;
 		}
+
 
 		[BindProperty]
 		public IList<SelectListItem> Adjectives { get; set; }
 
 
-		public void OnGet()
-		{				
-			var clientsList = _unitofWork.Client.List();
+		public IActionResult OnGet(int id)
+		{		
 			var adjectivesList = _unitofWork.Adjective.List();
 
 			List<Adjective> AdjectiveList = new List<Adjective>();
@@ -43,6 +39,18 @@ namespace Johari.Pages.Clients
 			Adjectives = AdjectiveList.ToList<Adjective>()
 				.Select(c => new SelectListItem { Text = c.AdjName + "+" + c.AdjDefinition + "+" + c.AdjType, Value = c.AdjectiveID.ToString() })
 				.ToList<SelectListItem>();
+
+			var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+			string claimValue = claim.Value;
+			clientObj = _unitofWork.Client.Get(m => m.ASPNETUserID == claimValue, false, null);
+
+			clientResponseObj = _unitofWork.ClientResponses.Get(m => m.ClientID == clientObj.ClientID, false, null);
+            if (clientResponseObj != null)
+            {
+				return RedirectToPage("./ResponseExists");
+			}
+			return Page();
 		}
 
 		public IActionResult OnPost()
@@ -51,6 +59,12 @@ namespace Johari.Pages.Clients
 			{
 				return Page();
 			}
+
+			var claimsIdentity = (ClaimsIdentity)this.User.Identity;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+			string claimValue = claim.Value;
+
+			clientObj = _unitofWork.Client.Get(m => m.ASPNETUserID == claimValue, false, null);
 
 			//if boxes are checked add them to table
 			foreach (SelectListItem Adjective in Adjectives)
@@ -64,7 +78,7 @@ namespace Johari.Pages.Clients
 
 			_unitofWork.Commit();
 
-			return RedirectToPage("./Index");
+			return RedirectToPage("./ResponseExists");
 		}
 
 	}

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210924192954_adjectiveList")]
-    partial class adjectiveList
+    [Migration("20211002201714_Inital")]
+    partial class Inital
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -49,11 +49,11 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ASPNETUserID")
-                        .HasColumnType("int");
+                    b.Property<string>("ASPNETUserID")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("DOB")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("DOB")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
@@ -65,6 +65,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ClientID");
+
+                    b.HasIndex("ASPNETUserID");
 
                     b.ToTable("Client");
                 });
@@ -352,6 +354,15 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
+                });
+
+            modelBuilder.Entity("ApplicationCore.Models.Client", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("ASPNETUserID");
+
+                    b.Navigation("IdentityUser");
                 });
 
             modelBuilder.Entity("ApplicationCore.Models.ClientResponses", b =>

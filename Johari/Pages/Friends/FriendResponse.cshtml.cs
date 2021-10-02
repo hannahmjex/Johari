@@ -9,6 +9,7 @@ using ApplicationCore.Models;
 using ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace Johari.Pages.Clients
 {
@@ -24,11 +25,6 @@ namespace Johari.Pages.Clients
 		public FriendResponseModel(IUnitofWork unitofWork)
 		{
 			_unitofWork = unitofWork;
-			//harded right now to make the page load
-			clientObj = new Client();
-
-			//needs to get this from the onpost of the friend/index page
-			clientObj.ClientID = 2;
 		}
 
 		[BindProperty]
@@ -37,7 +33,6 @@ namespace Johari.Pages.Clients
 
 		public void OnGet()
 		{
-			var clientsList = _unitofWork.Friend.List();
 			var adjectivesList = _unitofWork.Adjective.List();
 
 			List<Adjective> AdjectiveList = new List<Adjective>();

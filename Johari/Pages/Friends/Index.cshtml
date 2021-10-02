@@ -4,50 +4,60 @@
 
 
 @{
+    ViewData["Title"] = "Index";
 }
 
-<form method="post" asp-action="Index">
-    <div class="container">
-        <div class="row px-2 mx-2 backgroundWhite border">
-            <div asp-validation-summary="All" class=" text-danger"></div>
-            <div class="col-12 px-3" style="border-bottom:1px solid #325d88">
-                <h2 class="text-primary">New Friend</h2>
-            </div>
-            <div class="col-8 pt-3">
-                <div class="form-group row">
-                    <div class="col-3">
-                        <label asp-for="ClientObj.ClientID"></label>
-                    </div>
-                    <div class="col-9">
-                        <input class="form-control" asp-for="ClientObj.ClientID" />
-                        <span class="text-danger" asp-validation-for="ClientObj.ClientID"></span>
+@if (Model.ClientExists)
+{
+    <form method="post" asp-action="Index">
+        <div class="container">
+            <div class="row px-2 mx-2 backgroundWhite border">
+                <div asp-validation-summary="All" class=" text-danger"></div>
+                <div class="col-12 px-3" style="border-bottom:1px solid #325d88">
+                    <h2 class="text-primary">New Friend</h2>
+                </div>
+                <div class="col-8 pt-3">
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label asp-for="ClientObj.ClientID"></label>
+                        </div>
+                        <div class="col-9">
+                            <input class="form-control" asp-for="ClientObj.ClientID" />
+                            <span class="text-danger" asp-validation-for="ClientObj.ClientID"></span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-8 pt-3">
-                <div class="form-group row">
-                    <div class="col-3">
-                        <label asp-for="FriendObj.Relationship"></label>
-                    </div>
-                    <div class="col-9">
-                        <input class="form-control" asp-for="FriendObj.Relationship" />
-                        <span class="text-danger" asp-validation-for="FriendObj.Relationship"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-8 pt-3">
-                <div class="form-group row">
-                    <div class="col-3">
-                        <label asp-for="FriendObj.HowLong"></label>
-                    </div>
-                    <div class="col-9">
-                        <input class="form-control" asp-for="FriendObj.HowLong" />
-                        <span class="text-danger" asp-validation-for="FriendObj.HowLong"></span>
+                <div class="col-8 pt-3">
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label asp-for="FriendObj.Relationship"></label>
+                        </div>
+                        <div class="col-9">
+                            <input class="form-control" asp-for="FriendObj.Relationship" />
+                            <span class="text-danger" asp-validation-for="FriendObj.Relationship"></span>
+                        </div>
                     </div>
                 </div>
+                <div class="col-8 pt-3">
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label asp-for="FriendObj.HowLong"></label>
+                        </div>
+                        <div class="col-9">
+                            <input class="form-control" asp-for="FriendObj.HowLong" />
+                            <span class="text-danger" asp-validation-for="FriendObj.HowLong"></span>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary form-control">Submit</button>
             </div>
-            <button type="submit" class="btn btn-primary form-control">Submit</button>
-        </div>   
-    </div>
-  
-</form>
+        </div>
+
+    </form>
+}
+else
+{
+    <p>Client ID is not valid.</p>
+    <a href="/Friends/Index" class="btn btn-success">Back</a>
+    }
+

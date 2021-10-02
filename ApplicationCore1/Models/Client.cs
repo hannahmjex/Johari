@@ -24,8 +24,8 @@ namespace ApplicationCore.Models
 
 		public string ASPNETUserID { get; set; }
 
-        //[ForeignKey("ASPNETUserID")]
-        //public virtual IdentityUser IdentityUser { get; set; }
+        [ForeignKey("ASPNETUserID")]
+        public virtual IdentityUser IdentityUser { get; set; }
 
     }
 }

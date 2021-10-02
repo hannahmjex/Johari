@@ -2,21 +2,23 @@
 
 @model Johari.Pages.Clients.IndexModel
 @using ApplicationCore.Models
+@using Johari.Areas.Identity.Pages.Account
 
 
 @{
-	ViewData["Title"] = "Index";
+    ViewData["Title"] = "Index";
 }
 
 <h1 id="title">Responses</h1>
+<p>Select 12 positive adjective and 7 negative adjectives to describe yourself.</p>
 
 
-@if (Model.clientObj.ClientID != 0)
+@if (User.Identity.IsAuthenticated)
+
 {
-
-<form method="post">
-            <div class="wrapper">
-                <div class="tableFixHead">
+    <form method="post">
+        <div class="wrapper">
+            <div class="tableFixHead">
                 <table cellpadding="5" class="table table-bordered" id="clientResponseTable">
                     <thead>
                         <tr>
@@ -27,88 +29,89 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        @{
-                            for (int i = 0; i < Model.Adjectives.Count(); i++)
-                            {
-                            <tr>
-                                <td>
-                                    @*Checkbox*@
-                                    <input asp-for="@Model.Adjectives[i].Value" type="hidden" />
-                                    <input asp-for="@Model.Adjectives[i].Text" type="hidden" />
-                                    <input asp-for="@Model.Adjectives[i].Selected" id="@i+checkbox" onclick="OnCheck(@i)" />
-                                </td>
+                        <tr>
+                            @{
+                                for (int i = 0; i < Model.Adjectives.Count(); i++)
+                                {
+                                <tr>
+                                    <td>
+                                        @*Checkbox*@
+                                        <input asp-for="@Model.Adjectives[i].Value" type="hidden" />
+                                        <input asp-for="@Model.Adjectives[i].Text" type="hidden" />
+                                        <input asp-for="@Model.Adjectives[i].Selected" id="@i+checkbox" onclick="OnCheck(@i)" />
+                                    </td>
 
-                                @{
-                                    string[] adj = Model.Adjectives[i].Text.ToString().Split('+');
-                                    for (int j = 0; j < adj.Length; j++)
-                                    {
-                                        //change adjtype to pos or neg instead of true or false
-                                        adj[j] = adj[j] == "False" ? "Negative" : adj[j] == "True" ? "Positive" : adj[j];
+                                    @{
+                                        string[] adj = Model.Adjectives[i].Text.ToString().Split('+');
+                                        for (int j = 0; j < adj.Length; j++)
+                                        {
+                                            //change adjtype to pos or neg instead of true or false
+                                            adj[j] = adj[j] == "False" ? "Negative" : adj[j] == "True" ? "Positive" : adj[j];
 
-                                        <td id="@i@j+detail" value="@adj[j]">
-                                            @adj[j]
-                                        </td>
+                                            <td id="@i@j+detail" value="@adj[j]">
+                                                @adj[j]
+                                            </td>
+                                        }
                                     }
-                                }
-                            </tr>
-                        }
-                        }
-                        <tr />
+                                </tr>
+                            }
+                            }
+                            <tr />
                         </tbody>
                     </table>
-                    </div>
                 </div>
-                <button type="submit" class="col-2 btn btn-primary form-control" onclick="return OnSubmitValidate()">Submit</button>
-    </form>
-}
-else
-{
-	<p>Please Login</p>
-}
-
-@section Scripts{ 
-<script>
-
-	var positivepicks = 0;
-	var negativepicks = 0;
-
-	function OnCheck(i) {
-		var row = i;
-		var column = "2";
-		var d = "+detail";
-		var pos = i + column + d;
-		var pick = document.getElementById(pos);
-		if (pick.innerText.match("Positive"))
-		{
-			positivepicks++;
-		}
-		if (pick.innerText.match("Negative")) {
-			negativepicks++;
-		}
-
-		document.getElementById("title").innerText = "Positive: " + positivepicks + " Negative: " + negativepicks;
-      
-		
-	}
-
-	function OnSubmitValidate() {
-		if (positivepicks != 12 && negativepicks!=5) {
-            swal('Error', 'Please Select Exactly 12 Positive and 5 Negative Traits', 'error')
-            return false;
-        }
-		if (positivepicks != 12) {
-            swal('Error', 'Please Select Exactly 12 Positive Traits', 'error')
-            return false;
-		}
-		if (negativepicks != 5) {
-			swal('Error', 'Please Select Exactly 5 Negative Traits', 'error')
-			return false;
-		}
-		else return true;
+            </div>
+            <button type="submit" class="col-2 btn btn-primary form-control" onclick="return OnSubmitValidate()">Submit</button>
+            <p id="nextStep"></p>
+            <p id="ID"></p>
+            <a id="url"></a>
+        </form>
+    }
+    else
+    {
+        <p>Please Login</p>
     }
 
-</script>
+@section Scripts{
+    <script>
+
+        var positivepicks = 0;
+        var negativepicks = 0;
+
+        function OnCheck(i) {
+            var row = i;
+            var column = "2";
+            var d = "+detail";
+            var pos = i + column + d;
+            var pick = document.getElementById(pos);
+            if (pick.innerText.match("Positive")) {
+                positivepicks++;
+            }
+            if (pick.innerText.match("Negative")) {
+                negativepicks++;
+            }
+
+            document.getElementById("title").innerText = "Positive: " + positivepicks + " Negative: " + negativepicks;
+
+
+        }
+
+        function OnSubmitValidate() {
+            if (positivepicks != 12 && negativepicks != 7) {
+                swal('Error', 'Please Select Exactly 12 Positive and 7 Negative Traits', 'error')
+                return false;
+            }
+            if (positivepicks != 12) {
+                swal('Error', 'Please Select Exactly 12 Positive Traits', 'error')
+                return false;
+            }
+            if (negativepicks != 7) {
+                swal('Error', 'Please Select Exactly 7 Negative Traits', 'error')
+                return false;
+            }
+            else return true;
+        }
+    </script>
 }
 
 

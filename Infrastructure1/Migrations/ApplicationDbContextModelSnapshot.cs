@@ -48,7 +48,7 @@ namespace Infrastructure.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("ASPNETUserID")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("DOB")
                         .HasColumnType("nvarchar(max)");
@@ -63,6 +63,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ClientID");
+
+                    b.HasIndex("ASPNETUserID");
 
                     b.ToTable("Client");
                 });
@@ -350,6 +352,15 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
+                });
+
+            modelBuilder.Entity("ApplicationCore.Models.Client", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("ASPNETUserID");
+
+                    b.Navigation("IdentityUser");
                 });
 
             modelBuilder.Entity("ApplicationCore.Models.ClientResponses", b =>
