@@ -31,8 +31,9 @@ namespace Johari.Pages.Clients
 		public IList<SelectListItem> Adjectives { get; set; }
 
 
-		public void OnGet()
+		public void OnGet(int id)
 		{
+			clientObj.ClientID = id;
 			var adjectivesList = _unitofWork.Adjective.List();
 
 			List<Adjective> AdjectiveList = new List<Adjective>();
@@ -54,9 +55,7 @@ namespace Johari.Pages.Clients
 			{
 				if (Adjective.Selected)
 				{
-					//Friend ID is just hardcoded to zero rn. Dont know what its really for.
-					_unitofWork.FriendResponses.Add(new FriendResponses { AdjectiveID = Int32.Parse(Adjective.Value), ClientID = clientObj.ClientID, FriendID=3 });
-
+					_unitofWork.FriendResponses.Add(new FriendResponses { AdjectiveID = Int32.Parse(Adjective.Value), ClientID = clientObj.ClientID });
 				}
 			}
 
