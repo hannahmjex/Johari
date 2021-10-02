@@ -9,8 +9,7 @@ namespace Infrastructure.Services
     public class SD
     {
         public const string ClientRole = "Client";
-        public const string FriendRole = "Friend";
-        //public static string ShoppingCart = "Shopping Cart"; //used to name the session
+        public const string AdminRole = "Admin";
     }
 
 }

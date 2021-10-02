@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using ApplicationCore.Models;
 using Infrastructure.Data;
+using Infrastructure.Services;
+using ApplicationCore.Interfaces;
 
 namespace Johari.Areas.Identity.Pages.Account
 {
@@ -26,19 +28,26 @@ namespace Johari.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly ApplicationDbContext _dbContext;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IUnitofWork _unitofWork;
+
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            ApplicationDbContext dbContext)
+            ApplicationDbContext dbContext,
+            RoleManager<IdentityRole> roleManager,
+            IUnitofWork unitofWork)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
             _dbContext = dbContext;
+            _roleManager = roleManager;
+            _unitofWork = unitofWork;
         }
 
         [BindProperty]
@@ -82,13 +91,23 @@ namespace Johari.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            string role = Request.Form["rdUserRole"].ToString();
+            if (_unitofWork.Client.List().Count() == 0)
+            {
+                role = SD.AdminRole;
+            } //make the first login a manager)
+            else 
+            { 
+                role = SD.ClientRole; 
+            }
+
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser 
-                { 
-                    UserName = Input.Email, 
+                var user = new ApplicationUser
+                {
+                    UserName = Input.Email,
                     Email = Input.Email,
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
@@ -105,8 +124,24 @@ namespace Johari.Areas.Identity.Pages.Account
                 _dbContext.Add(client);
                 _dbContext.SaveChanges();
 
+                //add the roles to the ASPNET Roles table if they do not exist yet
+                if (!await _roleManager.RoleExistsAsync(SD.AdminRole))
+                {
+                    _roleManager.CreateAsync(new IdentityRole(SD.AdminRole)).GetAwaiter().GetResult();
+                    _roleManager.CreateAsync(new IdentityRole(SD.ClientRole)).GetAwaiter().GetResult();
+                }
+
                 if (result.Succeeded)
                 {
+                    if (role == SD.AdminRole)
+                    {
+                        await _userManager.AddToRoleAsync(user, SD.AdminRole);
+                    }
+                    else
+                    {
+                        await _userManager.AddToRoleAsync(user, SD.ClientRole);
+                    }
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
