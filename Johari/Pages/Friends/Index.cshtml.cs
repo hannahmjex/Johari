@@ -46,7 +46,7 @@ namespace Johari.Pages.Friends
                     
                     ClientExists = true;
                     //return RedirectToPage("./FriendResponse");
-                    Response.Redirect(string.Format("./FriendResponse?id={0}", ClientObj.ClientID));
+                    Response.Redirect(string.Format("./Friends/FriendResponse?id={0}", ClientObj.ClientID));
                 }
             }
 

@@ -10,6 +10,10 @@
 <form method="post">
     <div class="wrapper">
         <div class="tableFixHead">
+            @if (Model.clientObj.ClientID != 0)
+            {
+            <input type="hidden" asp-for="clientObj.ClientID" />
+            }
             <table cellpadding="5" class="table table-bordered" id="clientResponseTable">
                 <thead>
                     <tr>
@@ -24,27 +28,27 @@
                         @{
                             for (int i = 0; i < Model.Adjectives.Count(); i++)
                             {
-                            <tr>
-                                <td>
-                                    @*Checkbox*@
-                                    <input asp-for="@Model.Adjectives[i].Value" type="hidden" />
-                                    <input asp-for="@Model.Adjectives[i].Text" type="hidden" />
-                                    <input asp-for="@Model.Adjectives[i].Selected" id="@i+checkbox" onclick="OnCheck(@i)" />
-                                </td>
+                        <tr>
+                            <td>
+                                @*Checkbox*@
+                                <input asp-for="@Model.Adjectives[i].Value" type="hidden" />
+                                <input asp-for="@Model.Adjectives[i].Text" type="hidden" />
+                                <input asp-for="@Model.Adjectives[i].Selected" id="@i+checkbox" onclick="OnCheck(@i)" />
+                            </td>
 
-                                @{
+                            @{
                                     string[] adj = Model.Adjectives[i].Text.ToString().Split('+');
                                     for (int j = 0; j < adj.Length; j++)
                                     {
                                         //change adjtype to pos or neg instead of true or false
                                         adj[j] = adj[j] == "False" ? "Negative" : adj[j] == "True" ? "Positive" : adj[j];
 
-                                        <td id="@i@j+detail" value="@adj[j]">
-                                            @adj[j]
-                                        </td>
+                                <td id="@i@j+detail" value="@adj[j]">
+                                    @adj[j]
+                                </td>
                                     }
-                                }
-                            </tr>
+                            }
+                        </tr>
                         }
                         }
                         <tr />

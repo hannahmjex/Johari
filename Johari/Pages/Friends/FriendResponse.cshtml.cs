@@ -20,11 +20,15 @@ namespace Johari.Pages.Clients
 		[BindProperty]
 		public Adjective AdjectiveObj { get; set; }
 
+		[BindProperty]
 		public Client clientObj { get; set; }
+
+		public int clientID;
 
 		public FriendResponseModel(IUnitofWork unitofWork)
 		{
 			_unitofWork = unitofWork;
+			
 		}
 
 		[BindProperty]
@@ -33,6 +37,7 @@ namespace Johari.Pages.Clients
 
 		public void OnGet(int id)
 		{
+			clientObj = new Client();
 			clientObj.ClientID = id;
 			var adjectivesList = _unitofWork.Adjective.List();
 
@@ -53,15 +58,18 @@ namespace Johari.Pages.Clients
 			//if boxes are checked add them to table
 			foreach (SelectListItem Adjective in Adjectives)
 			{
+				Friend f = _unitofWork.Friend.List().Last();
+
+
 				if (Adjective.Selected)
 				{
-					_unitofWork.FriendResponses.Add(new FriendResponses { AdjectiveID = Int32.Parse(Adjective.Value), ClientID = clientObj.ClientID });
+					_unitofWork.FriendResponses.Add(new FriendResponses { AdjectiveID = Int32.Parse(Adjective.Value), FriendID = f.FriendID,ClientID = clientObj.ClientID });
 				}
 			}
 
 			_unitofWork.Commit();
 
-			return RedirectToPage("./Index");
+			return RedirectToPage("../Index");
 		}
 
 	}
