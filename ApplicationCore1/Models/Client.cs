@@ -18,14 +18,14 @@ namespace ApplicationCore.Models
 
 		public string LastName { get; set; }
 
-		public DateTime DOB { get; set; }
+		public string DOB { get; set; }
 
 		public string Gender { get; set; }
 
-		public int ASPNETUserID { get; set; }
+		public string ASPNETUserID { get; set; }
 
-		//[ForeignKey("ASPNETUserID")]
-		//public virtual IdentityUser IdentityUser { get; set; }
+        //[ForeignKey("ASPNETUserID")]
+        //public virtual IdentityUser IdentityUser { get; set; }
 
-	}
+    }
 }

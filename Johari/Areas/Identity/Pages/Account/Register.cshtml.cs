@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using ApplicationCore.Models;
+using Infrastructure.Data;
 
 namespace Johari.Areas.Identity.Pages.Account
 {
@@ -24,17 +25,20 @@ namespace Johari.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly ApplicationDbContext _dbContext;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ApplicationDbContext dbContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _dbContext = dbContext;
         }
 
         [BindProperty]
@@ -61,6 +65,13 @@ namespace Johari.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Required]
+            public string FirstName { get; set; }
+            [Required]
+            public string LastName { get; set; }
+            public string DOB { get; set; }
+            public string Gender { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -75,8 +86,26 @@ namespace Johari.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
+                var user = new ApplicationUser 
+                { 
+                    UserName = Input.Email, 
+                    Email = Input.Email,
+                };
                 var result = await _userManager.CreateAsync(user, Input.Password);
+                //var current_User = await _userManager.GetUserAsync(HttpContext.User);
+                var current_User = user.Id;
+
+                var client = new Client
+                {
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
+                    DOB = Input.DOB,
+                    Gender = Input.Gender,
+                    //ASPNETUserID = current_User
+                };
+                _dbContext.Add(client);
+                _dbContext.SaveChanges();
+
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
