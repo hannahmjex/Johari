@@ -18,59 +18,74 @@
 {
     <form method="post">
         <div class="wrapper">
-            <div class="tableFixHead">
-                <table cellpadding="5" class="table table-bordered" id="clientResponseTable">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Adjectives</th>
-                            <th>Description</th>
-                            <th>Adjective Type</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            @{
-                                for (int i = 0; i < Model.Adjectives.Count(); i++)
-                                {
-                                <tr>
-                                    <td>
-                                        @*Checkbox*@
-                                        <input asp-for="@Model.Adjectives[i].Value" type="hidden" />
-                                        <input asp-for="@Model.Adjectives[i].Text" type="hidden" />
-                                        <input asp-for="@Model.Adjectives[i].Selected" id="@i+checkbox" onclick="OnCheck(@i)" />
-                                    </td>
+            <div>
+                @{
+                    List<string> posAdj = new List<string>();
+                    List<string> negAdj = new List<string>();
 
-                                    @{
-                                        string[] adj = Model.Adjectives[i].Text.ToString().Split('+');
-                                        for (int j = 0; j < adj.Length; j++)
-                                        {
-                                            //change adjtype to pos or neg instead of true or false
-                                            adj[j] = adj[j] == "False" ? "Negative" : adj[j] == "True" ? "Positive" : adj[j];
 
-                                            <td id="@i@j+detail" value="@adj[j]">
-                                                @adj[j]
-                                            </td>
-                                        }
-                                    }
-                                </tr>
-                            }
-                            }
-                            <tr />
-                        </tbody>
-                    </table>
-                </div>
+                    for (int i = 0; i < Model.Adjectives.Count(); i++)
+                    {
+                        string[] adj = Model.Adjectives[i].Text.ToString().Split('+');
+
+                        //change adjtype to pos or neg instead of true or false
+                        if (adj[2] == "True")
+                        {
+                            adj[2] = "Positive";
+                            posAdj.Add(adj[0]);
+                        }
+                        else if (adj[2] == "False")
+                        {
+                            adj[2] = "Negative";
+                            negAdj.Add(adj[0]);
+                        }
+                    }
+                    <div>
+                        <h3>Positive Adjectives</h3>
+                    </div>
+                    int count = 0;
+                    int countAgain = 0;
+                    foreach (string adj in posAdj)
+                    {
+                        count++;
+                        if (count == 11)
+                        {
+                            count = 0;
+                            <br />
+                        }
+                        <input asp-for="@Model.Adjectives[posAdj.IndexOf(adj)].Value" type="hidden" />
+                        <input asp-for="@Model.Adjectives[posAdj.IndexOf(adj)].Text" type="hidden" />
+                        <input asp-for="@Model.Adjectives[posAdj.IndexOf(adj)].Selected" id="posAdj" onclick="OnCheck(true)" />
+                        <label for="posAdj">@adj</label>
+                    }
+                    <div>
+                        <br />
+                        <h3>Negative Adjectives</h3>
+                    </div>
+                    foreach (string adj in negAdj)
+                    {
+                        countAgain++;
+                        if (countAgain == 11)
+                        {
+                            countAgain = 0;
+                            <br />
+                        }
+                        <input asp-for="@Model.Adjectives[negAdj.IndexOf(adj)].Value" type="hidden" />
+                        <input asp-for="@Model.Adjectives[negAdj.IndexOf(adj)].Text" type="hidden" />
+                        <input asp-for="@Model.Adjectives[negAdj.IndexOf(adj)].Selected" id="negAdj" onclick="OnCheck(false)" />
+                        <label for="negAdj">@adj</label>
+                    }
+                }
             </div>
-            <button type="submit" class="col-2 btn btn-primary form-control" onclick="return OnSubmitValidate()">Submit</button>
-            <p id="nextStep"></p>
-            <p id="ID"></p>
-            <a id="url"></a>
-        </form>
-    }
-    else
-    {
-        <p>Please Login</p>
-    }
+
+        </div>
+        <button type="submit" class="col-2 btn btn-primary form-control" onclick="return OnSubmitValidate()">Submit</button>
+    </form>
+}
+else
+{
+    <p>Please Login</p>
+}
 
 @section Scripts{
     <script>
@@ -78,18 +93,35 @@
         var positivepicks = 0;
         var negativepicks = 0;
 
-        function OnCheck(i) {
-            var row = i;
-            var column = "2";
-            var d = "+detail";
-            var pos = i + column + d;
-            var pick = document.getElementById(pos);
-            if (pick.innerText.match("Positive")) {
-                positivepicks++;
+        function OnCheck(type) {
+            if (type == true) {
+                if (document.getElementById('posAdj').checked) {
+                    positivepicks++
+                }
+                else {
+                    positivepicks--;
+                }
+
             }
-            if (pick.innerText.match("Negative")) {
-                negativepicks++;
+            else if (type == false) {
+                if (document.getElementById('negAdj').checked) {
+                    negativepicks++;
+                }
+                else {
+                    negativepicks--;
+                }
             }
+            //var row = i;
+            //var column = "2";
+            //var d = "+detail";
+            //var pos = i + column + d;
+            //var pick = document.getElementById(pos);
+            //if (pick.innerText.match("Positive")) {
+            //    positivepicks++;
+            //}
+            //if (pick.innerText.match("Negative")) {
+            //    negativepicks++;
+            //}
 
             document.getElementById("title").innerText = "Positive: " + positivepicks + " Negative: " + negativepicks;
 

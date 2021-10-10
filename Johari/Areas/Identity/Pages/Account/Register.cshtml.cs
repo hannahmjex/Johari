@@ -92,14 +92,8 @@ namespace Johari.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             string role = Request.Form["rdUserRole"].ToString();
-            if (_unitofWork.Client.List().Count() == 0)
-            {
-                role = SD.AdminRole;
-            } //make the first login a manager)
-            else 
-            { 
-                role = SD.ClientRole; 
-            }
+            role = SD.ClientRole; 
+            
 
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
