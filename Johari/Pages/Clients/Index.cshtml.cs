@@ -60,12 +60,6 @@ namespace Johari.Pages.Clients
 				return Page();
 			}
 
-            //List<Adjective> AdjectiveList = new List<Adjective>();
-            //AdjectiveList = (List<Adjective>)_unitofWork.Adjective.List();
-            //Adjectives = AdjectiveList.ToList<Adjective>()
-            //    .Select(c => new SelectListItem { Text = c.AdjName, Value = c.AdjectiveID.ToString() })
-            //    .ToList<SelectListItem>();
-
             var claimsIdentity = (ClaimsIdentity)this.User.Identity;
 			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 			string claimValue = claim.Value;

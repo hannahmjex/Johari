@@ -1,20 +1,38 @@
 ﻿@page
 @model Johari.Pages.Admin.IndexModel
+@using ApplicationCore.Models
+
 @{
 }
 
-<h2 style="text-align:center">Johari Window for Client</h2>
-<h3 style="text-align:center">FirstName LastName</h3>
-<br/>
-<table id="johari_table" class="table table-bordered">
-	<thead>
-		<tr>
-			<th>Open Adjective Matches</th>
-			<th>Blind Adjective Matches</th>
-		</tr>
-		<tr>
-			<th>Hidden Adjective Matches</th>
-			<th>Unknow Adjectives</th>
-		</tr>
-	</thead>
-</table>
+<h3>Select the client you would like to run a Johari Window for.</h3>
+<form method="post">
+    <div>
+        <div class="dropdown">
+            <label for="clients">Client: </label>
+            <select class="dropdown-item-text" asp-for="@Model.Clients">
+
+                @{
+                    for (int i = 0; i < Model.Clients.Count(); i++)
+                    {
+                        <option hidden asp-for="@Model.Clients[i].Value"/>
+                        <option hidden asp-for="@Model.Clients[i].Text"/>
+                        <option asp-for="@Model.Clients[i].Selected">@Model.Clients[i].Text</option>
+                    }
+                }
+            </select>
+        </div>
+        <br />
+        <br/> 
+        <button type="submit" class="col-2 btn btn-primary form-control">Submit</button>
+    </div>
+</form>
+
+@section Scripts{
+    <script>
+        function OnSubmit() {
+
+        }
+
+    </script>
+}
