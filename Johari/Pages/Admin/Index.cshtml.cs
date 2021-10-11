@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
+using Johari.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,33 +15,44 @@ namespace Johari.Pages.Admin
     {
         private readonly IUnitofWork _unitofWork;
 
-        public Client clientObj { get; set; }
-
         [BindProperty]
-        public IList<SelectListItem> Clients { get; set; }
+        public ClientVM clientObj { get; set; }
+
+        public ClientVM SelectedClient { get; set; }
 
         public IndexModel(IUnitofWork unitofWork)
         {
             _unitofWork = unitofWork;
         }
-        public void OnGet()
+        public void OnGet(int? ClientID)
         {
-            List<Client> ClientList = new List<Client>();
-            ClientList = (List<Client>)_unitofWork.Client.List();
-            Clients = ClientList.ToList<Client>()
-                .Select(c => new SelectListItem { Text = c.FirstName + " " + c.LastName, Value = c.ClientID.ToString()})
-                .ToList<SelectListItem>(); 
+            var clients = _unitofWork.Client.List();
+
+            //on submit new client id
+            if (ClientID != null)
+            {
+                clientObj = new ClientVM
+                {
+                    Clients = _unitofWork.Client.Get(u => u.ClientID == ClientID),
+                    ClientList = clients.Select(c => new SelectListItem { Value = c.ClientID.ToString(), Text = c.FirstName + " " + c.LastName })
+                };
+            }
+
+            //first time page load
+            else
+            {
+                clientObj = new ClientVM
+                {
+                    Clients = new Client(),
+                    ClientList = clients.Select(c => new SelectListItem { Value = c.ClientID.ToString(), Text = c.FirstName + " " + c.LastName })
+                };
+            }
+
         }
 
-        public void OnPost()
+        public IActionResult OnPost()
         {
-            foreach (SelectListItem Client in Clients)
-            {
-                if (Client.Selected)
-                {
-                    Response.Redirect(string.Format("./Admin/JohariWindow?id={0}", Int32.Parse(Client.Value)));
-                }
-            }
+            return RedirectToPage("./Index", new { clientObj.Clients.ClientID });
         }
     }
 }

@@ -6,18 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Johari
+namespace Johari.ViewModels
 {
-    public class ClientResponseVM
+    public class ClientVM
     {
         [BindProperty]
-        public ClientResponses ClientResponses { get; set; }
+        public Client Clients { get; set; }
 
         public IEnumerable<SelectListItem> ClientList { get; set; }
-
-        public IEnumerable<SelectListItem> AdjectiveList { get; set; }
-
-
-
     }
 }
