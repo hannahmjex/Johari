@@ -10,6 +10,7 @@ using ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using System.ComponentModel.DataAnnotations;
 
 namespace Johari.Pages.Clients
 {
@@ -25,6 +26,25 @@ namespace Johari.Pages.Clients
 			_unitofWork = unitofWork;
 		}
 
+		[Required]
+		[EmailAddress]
+		[Display(Name = "Email")]
+		public string Email1{ get; set; }
+
+		[Required]
+		[EmailAddress]
+		[Display(Name = "Email")]
+		public string Email2 { get; set; }
+
+		[Required]
+		[EmailAddress]
+		[Display(Name = "Email")]
+		public string Email3 { get; set; }
+
+		[Required]
+		[EmailAddress]
+		[Display(Name = "Email")]
+		public string Email4 { get; set; }
 
 		[BindProperty]
 		public IList<SelectListItem> Adjectives { get; set; }

@@ -81,6 +81,26 @@ body {
     top: 0;
 }
 
-th {
-    background: #eee;
+.open{
+    background: #f7dd4e
+}
+
+.blind{
+    background: #8ed557
+}
+
+.unknown{
+    background: #c44e4e
+}
+
+.hidden{
+    background: #4c88c6
+}
+
+td, th{
+    width: 50%
+}
+
+th{
+    text-align: center
 }

@@ -60,12 +60,12 @@
                             if (count == 11)
                             {
                                 count = 0;
-                            <br />
+                                <br />
                             }
-                        <input asp-for="@Model.Adjectives[posAdj.IndexOf(adj)].Value" type="hidden" />
-                        <input asp-for="@Model.Adjectives[posAdj.IndexOf(adj)].Text" type="hidden" />
-                        <input asp-for="@Model.Adjectives[posAdj.IndexOf(adj)].Selected" id="posAdj+@posAdj.IndexOf(adj)" onclick="OnCheck(@posAdj.IndexOf(adj),true)" />
-                        <label for="posAdj+@posAdj.IndexOf(adj)">@adj</label>
+                            <input asp-for="@Model.Adjectives[posAdj.IndexOf(adj)].Value" type="hidden" />
+                            <input asp-for="@Model.Adjectives[posAdj.IndexOf(adj)].Text" type="hidden" />
+                            <input asp-for="@Model.Adjectives[posAdj.IndexOf(adj)].Selected" id="posAdj+@posAdj.IndexOf(adj)" onclick="OnCheck(@posAdj.IndexOf(adj),true)" />
+                            <label for="posAdj+@posAdj.IndexOf(adj)">@adj</label>
                         }
                     }
                     <div>
@@ -80,19 +80,48 @@
                             if (countAgain == 11)
                             {
                                 countAgain = 0;
-                            <br />
+                                <br />
                             }
-                        <input asp-for="@Model.Adjectives[negAdj.IndexOf(adj)].Value" type="hidden" />
-                        <input asp-for="@Model.Adjectives[negAdj.IndexOf(adj)].Text" type="hidden" />
-                        <input asp-for="@Model.Adjectives[negAdj.IndexOf(adj)].Selected" id="negAdj+@negAdj.IndexOf(adj)" onclick="OnCheck(@negAdj.IndexOf(adj),false)" />
-                        <label for="negAdj+@negAdj.IndexOf(adj)">@adj</label>
-                            }
+                            <input asp-for="@Model.Adjectives[negAdj.IndexOf(adj)].Value" type="hidden" />
+                            <input asp-for="@Model.Adjectives[negAdj.IndexOf(adj)].Text" type="hidden" />
+                            <input asp-for="@Model.Adjectives[negAdj.IndexOf(adj)].Selected" id="negAdj+@negAdj.IndexOf(adj)" onclick="OnCheck(@negAdj.IndexOf(adj),false)" />
+                            <label for="negAdj+@negAdj.IndexOf(adj)">@adj</label>
                         }
                     }
+                }
             </div>
-
+            <div>
+                <br />
+                <h3>Enter 4 Friends Emails</h3>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-4">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="@Model.Email1"></label>
+                        <input asp-for="@Model.Email1" class="form-control" />
+                        <span asp-validation-for="@Model.Email1" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="@Model.Email2"></label>
+                        <input asp-for="@Model.Email2" class="form-control" />
+                        <span asp-validation-for="@Model.Email2" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="@Model.Email3"></label>
+                        <input asp-for="@Model.Email3" class="form-control" />
+                        <span asp-validation-for="@Model.Email3" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="@Model.Email4"></label>
+                        <input asp-for="@Model.Email4" class="form-control" />
+                        <span asp-validation-for="@Model.Email4" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <button type="submit" class="col-2 btn btn-primary form-control" onclick="return OnSubmitValidate()">Submit</button>
+        <button type="submit" id="validate" class="col-2 btn btn-primary form-control" onclick="return OnSubmitValidate()">Submit</button>
     </form>
 }
 else
@@ -101,7 +130,9 @@ else
 }
 
 @section Scripts{
+    <partial name="_ValidationScriptsPartial" />
     <script>
+
 
         var positivepicks = 0;
         var negativepicks = 0;
@@ -113,7 +144,7 @@ else
                 var something = position;
                 var docID = pos + something;
 
-                if (document.getElementById(docID).checked==true) {
+                if (document.getElementById(docID).checked == true) {
                     positivepicks++
                 }
 
@@ -135,17 +166,6 @@ else
                     negativepicks--;
                 }
             }
-            //var row = i;
-            //var column = "2";
-            //var d = "+detail";
-            //var pos = i + column + d;
-            //var pick = document.getElementById(pos);
-            //if (pick.innerText.match("Positive")) {
-            //    positivepicks++;
-            //}
-            //if (pick.innerText.match("Negative")) {
-            //    negativepicks++;
-            //}
 
             document.getElementById("title").innerText = "Positive: " + positivepicks + " Negative: " + negativepicks;
 
@@ -165,7 +185,8 @@ else
                 swal('Error', 'Please Select Exactly 7 Negative Traits', 'error')
                 return false;
             }
-            else return true;
+            else
+                return true;
         }
     </script>
 }

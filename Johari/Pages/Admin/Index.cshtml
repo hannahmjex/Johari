@@ -20,14 +20,14 @@
         <button type="submit" class="col-3 btn btn-primary form-control">Submit</button>
     </div>
 
-    @if (Model.clientObj.Clients.ClientID != 0)
+    @if (Model.clientObj.Clients.ClientID !=0)
     {
         <h3 style="text-align:center">@Model.clientObj.Clients.FirstName @Model.clientObj.Clients.LastName</h3>
         <br />
         <table id="johari_table" class="table table-bordered">
             <tr>
-                <th>Open Adjective Matches</th>
-                <th>Blind Adjective Matches</th>
+                <th id="open" class="open">Open Self</th>
+                <th class="blind">Blind Self</th>
 
             </tr>
             <tr>
@@ -67,8 +67,8 @@
                 <td>@Model.blind</td>
             </tr>
             <tr>
-                <th>Hidden Adjective Matches</th>
-                <th>Unknown Adjectives</th>
+                <th class="hidden">Hidden Self</th>
+                <th class="unknown">Unknown Self</th>
             </tr>
             <tr>
                 <td>@Model.hidden</td>
