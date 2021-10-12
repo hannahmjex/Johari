@@ -7,7 +7,7 @@
     ViewData["Title"] = "Index";
 }
 
-@if (Model.ClientExists)
+@if (Model.ClientExists && !Model.MaxFriends)
 {
     <form method="post" asp-action="Index">
         <div class="container">
@@ -49,15 +49,38 @@
                         </div>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary form-control">Submit</button>
+                <div class="col-8 pt-3">
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <button type="submit" class="btn btn-primary form-control">Submit</button>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </div>
 
     </form>
 }
-else
+else if (Model.ClientExists == false)
 {
-    <p>Client ID is not valid.</p>
-    <a href="/Friends/Index" class="btn btn-success">Back</a>
-    }
+    <div class="container row">
+        <div class="col-12 text-center">
+            <h1 class="text-primary text-center">Client ID is not a valid Client</h1>
+            <a href="/Friends/Index" class="btn btn-success">Back</a>
+        </div>
+    </div>
+
+
+}
+else if (Model.MaxFriends)
+{
+    <div class="container row">
+        <div class="col-12 text-center">
+            <h1 class="text-primary text-center">Maximum number of friends have submitted responses!</h1>
+            <a href="/Friends/Index" class="btn btn-success">Back</a>
+        </div>
+    </div>
+
+}
 

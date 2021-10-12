@@ -92,7 +92,7 @@ namespace Johari.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             string role = Request.Form["rdUserRole"].ToString();
-            role = SD.ClientRole; 
+            role = SD.ClientRole;
             
 
             returnUrl ??= Url.Content("~/");

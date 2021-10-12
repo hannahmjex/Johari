@@ -110,7 +110,7 @@ namespace Johari.Pages.Clients
 			_unitofWork.Commit();
 
 			string subject = "Johari for a Friend!";
-			string message = $"Please fill out the Johari questionairre for " + clientObj.FirstName + " " + clientObj.LastName + " <a href='https://joharihannahalex.azurewebsites.net/Friends'>clicking here</a> and using the ID: " + clientObj.ClientID;
+			string message = $"Please fill out the Johari questionairre for " + clientObj.FirstName + " " + clientObj.LastName + " <a href='https://joharihannahalex.azurewebsites.net/Friends?id="+ clientObj.ClientID + "'>clicking here</a> and using the ID: " + clientObj.ClientID;
 
 			await _emailSender.SendEmailAsync(Email1, subject, message);
 			await _emailSender.SendEmailAsync(Email2, subject, message);

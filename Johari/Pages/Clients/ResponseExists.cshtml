@@ -3,9 +3,17 @@
 @{
 }
 
-<h1 id="title">Responses</h1>
-<p>You have submitted your responses!</p>
-<p>Your 4 friends were automatically emailed</p>
-<p>You may also use this link and ID.</p>
-<a>https://joharihannahalex.azurewebsites.net/Friends</a>
-<p>ID: @Model.clientObj.ClientID</p>
+<div class="container row">
+    <div class="col-12 text-center">
+        <h1 class="text-primary text-center">Response Submitted!</h1>
+        Your unique user ID is @Model.clientObj.ClientID <br />
+    </div>
+    <div class="col-12 text-center">
+
+        <p>Your 4 friends were automatically emailed</p>
+        <p>You may also use this link and ID:</p>
+        <a href="https://joharihannahalex.azurewebsites.net/Friends">Clicking Here</a>
+        <p>And using ID: @Model.clientObj.ClientID</p>
+    </div>
+</div>
+

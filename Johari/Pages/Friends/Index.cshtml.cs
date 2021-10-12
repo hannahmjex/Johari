@@ -23,13 +23,26 @@ namespace Johari.Pages.Friends
         [BindProperty]
         public bool ClientExists { get; set; }
 
+        [BindProperty]
+        public bool MaxFriends { get; set; }
+
         public IndexModel(IUnitofWork unitofWork)
         {
             _unitofwork = unitofWork;
             ClientObj = new Client();
             FriendObj = new Friend();
             ClientExists = true;
+            MaxFriends = false;
         }
+
+        public void OnGet(int? id)
+        {
+            if(id>0)
+            {
+                ClientObj = _unitofwork.Client.Get(u => u.ClientID == id);
+            }
+        }
+
         public IActionResult OnPost()
         {
             //if client id is verified from clientDB redirect to /FriendResponse
@@ -37,22 +50,33 @@ namespace Johari.Pages.Friends
             var clientsList = _unitofwork.Client.List();
             clients = (List<Client>)clientsList;
 
-            foreach (Client c in clients)
+            
+            int frlist = _unitofwork.FriendResponses.List(u => u.ClientID == ClientObj.ClientID).Count();
+            int numFr = 19; //the number of responses each friend is required to enter
+
+            if ((frlist/numFr)< 4)
             {
-                if(c.ClientID==ClientObj.ClientID)
+
+                foreach (Client c in clients)
                 {
-                    _unitofwork.Friend.Add(new Friend {HowLong = FriendObj.HowLong, Relationship = FriendObj.Relationship });
-                    _unitofwork.Commit();
-                    
-                    ClientExists = true;
-                    //return RedirectToPage("./FriendResponse");
-                    Response.Redirect(string.Format("./Friends/FriendResponse?id={0}", ClientObj.ClientID));
+                    if (c.ClientID == ClientObj.ClientID)
+                    {
+
+                        _unitofwork.Friend.Add(new Friend { HowLong = FriendObj.HowLong, Relationship = FriendObj.Relationship });
+                        _unitofwork.Commit();
+
+                        ClientExists = true;
+                        Response.Redirect(string.Format("./Friends/FriendResponse?id={0}", ClientObj.ClientID));
+                    }
                 }
+
+                ClientExists = false;
+
             }
-
-            ClientExists = false;
-
-          
+            else
+            {
+                MaxFriends = true;
+            }
             return Page();
 
         }
