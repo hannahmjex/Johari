@@ -11,38 +11,49 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using System.Text.Encodings.Web;
 
 namespace Johari.Pages.Clients
 {
 	public class IndexModel : PageModel
 	{
 		private readonly IUnitofWork _unitofWork;
+		private readonly IEmailSender _emailSender;
+
+	
 
 		public Client clientObj { get; set; }
 		public ClientResponses clientResponseObj { get; set; }
 
-		public IndexModel(IUnitofWork unitofWork)
+		public IndexModel(IUnitofWork unitofWork, IEmailSender emailSender)
 		{
 			_unitofWork = unitofWork;
+			_emailSender = emailSender;
+
 		}
 
 		[Required]
 		[EmailAddress]
+		[BindProperty]
 		[Display(Name = "Email")]
 		public string Email1{ get; set; }
 
 		[Required]
 		[EmailAddress]
+		[BindProperty]
 		[Display(Name = "Email")]
 		public string Email2 { get; set; }
 
 		[Required]
 		[EmailAddress]
+		[BindProperty]
 		[Display(Name = "Email")]
 		public string Email3 { get; set; }
 
 		[Required]
 		[EmailAddress]
+		[BindProperty]
 		[Display(Name = "Email")]
 		public string Email4 { get; set; }
 
@@ -73,7 +84,7 @@ namespace Johari.Pages.Clients
 			return Page();
 		}
 
-		public IActionResult OnPost()
+		public async Task<IActionResult> OnPostAsync()
 		{
 			if (!ModelState.IsValid)
 			{
@@ -97,6 +108,14 @@ namespace Johari.Pages.Clients
 			}
 
 			_unitofWork.Commit();
+
+			string subject = "Johari for a Friend!";
+			string message = $"Please fill out the Johari questionairre for " + clientObj.FirstName + " " + clientObj.LastName + " <a href='https://joharihannahalex.azurewebsites.net/Friends'>clicking here</a> and using the ID: " + clientObj.ClientID;
+
+			await _emailSender.SendEmailAsync(Email1, subject, message);
+			await _emailSender.SendEmailAsync(Email2, subject, message);
+			await _emailSender.SendEmailAsync(Email3, subject, message);
+			await _emailSender.SendEmailAsync(Email4, subject, message);
 
 			return RedirectToPage("./ResponseExists");
 		}
