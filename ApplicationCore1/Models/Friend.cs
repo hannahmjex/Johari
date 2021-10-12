@@ -16,6 +16,7 @@ namespace ApplicationCore.Models
 
 		public string Relationship { get; set; }
 
+		[Display(Name = "Relationship Length")]
 		public string HowLong { get; set; }
 	
 

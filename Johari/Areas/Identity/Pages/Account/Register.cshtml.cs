@@ -76,8 +76,10 @@ namespace Johari.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
 
             [Required]
+            [Display(Name = "First Name")]
             public string FirstName { get; set; }
             [Required]
+            [Display(Name = "Last Name")]
             public string LastName { get; set; }
             public string DOB { get; set; }
             public string Gender { get; set; }
@@ -115,8 +117,15 @@ namespace Johari.Areas.Identity.Pages.Account
                     Gender = Input.Gender,
                     ASPNETUserID = current_UserId
                 };
-                _dbContext.Add(client);
-                _dbContext.SaveChanges();
+                try
+                {
+                    _dbContext.Add(client);
+                    _dbContext.SaveChanges();
+                }
+                catch (Exception e)
+                {
+
+                }
 
                 //add the roles to the ASPNET Roles table if they do not exist yet
                 if (!await _roleManager.RoleExistsAsync(SD.AdminRole))

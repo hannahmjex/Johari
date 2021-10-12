@@ -20,7 +20,7 @@
         <button type="submit" class="col-3 btn btn-primary form-control">Submit</button>
     </div>
 
-    @if (Model.clientObj.Clients.ClientID !=0)
+    @if (Model.clientObj.Clients.ClientID != 0)
     {
         <h3 style="text-align:center">@Model.clientObj.Clients.FirstName @Model.clientObj.Clients.LastName</h3>
         <br />
@@ -35,27 +35,45 @@
                     @{
                         int count = 0;
 
+                        List<string> copyOpenList = new List<string>();
+
                         for (int i = 0; i < Model.adjObj.OpenList.Count(); i++)
                         {
-                            for (int j = 0; j < Model.adjObj.OpenList.Count(); j++)
+                            copyOpenList.Add(Model.adjObj.OpenList[i]);
+                        }
+
+                        for (int i = 0; i < Model.adjObj.OpenList.Count() - 1; i++)
+                        {
+                            //for (int j = 0; j < copyOpenList.Count(); j++)
+                            //{
+                            int j = 0;
+                            while (j < copyOpenList.Count())
                             {
-                                if (Model.adjObj.OpenList[i] == Model.adjObj.OpenList[j])
+
+                                //if same word twice
+                                if (Model.adjObj.OpenList[i] == copyOpenList[j])
                                 {
                                     count++;
-                                  
+                                    copyOpenList.RemoveAt(j);
+                                    j = 0;
+                                }
+                                else
+                                {
+                                    j++;
                                 }
 
                             }
 
-                            if (count == 0)
+
+                            if (count == 1)
                             {
                                 @Model.adjObj.OpenList[i]
                             }
-                            if (count == 1)
+                            if (count == 2)
                             {
                                 <b>@Model.adjObj.OpenList[i]</b>
                             }
-                            if (count == 2)
+                            if (count > 3)
                             {
                                 <u><b>@Model.adjObj.OpenList[i]</b></u>
                             }
