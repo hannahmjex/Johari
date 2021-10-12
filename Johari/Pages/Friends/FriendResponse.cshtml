@@ -9,98 +9,153 @@
 
 <form method="post">
     <div class="wrapper">
-        <div class="tableFixHead">
-            @if (Model.clientObj.ClientID != 0)
-            {
+        @if (Model.clientObj.ClientID != 0)
+        {
             <input type="hidden" asp-for="clientObj.ClientID" />
-            }
-            <table cellpadding="5" class="table table-bordered" id="clientResponseTable">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Adjectives</th>
-                        <th>Description</th>
-                        <th>Adjective Type</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        @{
-                            for (int i = 0; i < Model.Adjectives.Count(); i++)
-                            {
-                        <tr>
-                            <td>
-                                @*Checkbox*@
-                                <input asp-for="@Model.Adjectives[i].Value" type="hidden" />
-                                <input asp-for="@Model.Adjectives[i].Text" type="hidden" />
-                                <input asp-for="@Model.Adjectives[i].Selected" id="@i+checkbox" onclick="OnCheck(@i)" />
-                            </td>
+        }
+        <div>
+            @{
+                List<string> posAdj = new List<string>();
+                List<string> negAdj = new List<string>();
 
-                            @{
-                                    string[] adj = Model.Adjectives[i].Text.ToString().Split('+');
-                                    for (int j = 0; j < adj.Length; j++)
-                                    {
-                                        //change adjtype to pos or neg instead of true or false
-                                        adj[j] = adj[j] == "False" ? "Negative" : adj[j] == "True" ? "Positive" : adj[j];
-
-                                <td id="@i@j+detail" value="@adj[j]">
-                                    @adj[j]
-                                </td>
-                                    }
-                            }
-                        </tr>
-                        }
-                        }
-                        <tr />
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <button type="submit" class="col-2 btn btn-primary form-control" onclick="return OnSubmitValidate()">Submit</button>
-    </form>
-
-    @section Scripts{
-        <script>
-
-            var positivepicks = 0;
-            var negativepicks = 0;
-
-            function OnCheck(i) {
-                var row = i;
-                var column = "2";
-                var d = "+detail";
-                var pos = i + column + d;
-                var pick = document.getElementById(pos);
-                if (pick.innerText.match("Positive")) {
-                    positivepicks++;
+                for (int i = 0; i < Model.Adjectives.Count(); i++)
+                {
+                    posAdj.Add(" ");
+                    negAdj.Add(" ");
                 }
-                if (pick.innerText.match("Negative")) {
+
+
+                for (int i = 0; i < Model.Adjectives.Count(); i++)
+                {
+                    string[] adj = Model.Adjectives[i].Text.ToString().Split('+');
+
+                    //change adjtype to pos or neg instead of true or false
+                    if (adj[2] == "True")
+                    {
+                        adj[2] = "Positive";
+                        posAdj[i] = (adj[0]);
+                    }
+                    else if (adj[2] == "False")
+                    {
+                        adj[2] = "Negative";
+                        negAdj[i] = (adj[0]);
+                    }
+                }
+                <div>
+                    <h3>Positive Adjectives</h3>
+                </div>
+                int count = 0;
+                int countAgain = 0;
+                foreach (string adj in posAdj)
+                {
+                    if (adj != " ")
+                    {
+                        count++;
+                        if (count == 11)
+                        {
+                            count = 0;
+                        <br />
+                        }
+                    <input asp-for="@Model.Adjectives[posAdj.IndexOf(adj)].Value" type="hidden" />
+                    <input asp-for="@Model.Adjectives[posAdj.IndexOf(adj)].Text" type="hidden" />
+                    <input asp-for="@Model.Adjectives[posAdj.IndexOf(adj)].Selected" id="posAdj+@posAdj.IndexOf(adj)" onclick="OnCheck(@posAdj.IndexOf(adj),true)" />
+                    <label for="posAdj+@posAdj.IndexOf(adj)">@adj</label>
+                    }
+                }
+                <div>
+                    <br />
+                    <h3>Negative Adjectives</h3>
+                </div>
+                foreach (string adj in negAdj)
+                {
+                    if (adj != " ")
+                    {
+                        countAgain++;
+                        if (countAgain == 11)
+                        {
+                            countAgain = 0;
+                        <br />
+                        }
+                    <input asp-for="@Model.Adjectives[negAdj.IndexOf(adj)].Value" type="hidden" />
+                    <input asp-for="@Model.Adjectives[negAdj.IndexOf(adj)].Text" type="hidden" />
+                    <input asp-for="@Model.Adjectives[negAdj.IndexOf(adj)].Selected" id="negAdj+@negAdj.IndexOf(adj)" onclick="OnCheck(@negAdj.IndexOf(adj),false)" />
+                    <label for="negAdj+@negAdj.IndexOf(adj)">@adj</label>
+                        }
+                    }
+                }
+        </div>
+
+    </div>
+    <button type="submit" class="col-2 btn btn-primary form-control" onclick="return OnSubmitValidate()">Submit</button>
+</form>
+
+
+@section Scripts{
+    <script>
+
+        var positivepicks = 0;
+        var negativepicks = 0;
+
+        function OnCheck(position, type) {
+
+            if (type == true) {
+                var pos = "posAdj+";
+                var something = position;
+                var docID = pos + something;
+
+                if (document.getElementById(docID).checked == true) {
+                    positivepicks++
+                }
+
+                else {
+                    positivepicks--;
+                }
+
+            }
+            else if (type == false) {
+
+                var pos = "negAdj+";
+                var something = position;
+                var docID = pos + something;
+
+                if (document.getElementById(docID).checked) {
                     negativepicks++;
                 }
-
-                document.getElementById("title").innerText = "Positive: " + positivepicks + " Negative: " + negativepicks;
-
-
+                else {
+                    negativepicks--;
+                }
             }
+            //var row = i;
+            //var column = "2";
+            //var d = "+detail";
+            //var pos = i + column + d;
+            //var pick = document.getElementById(pos);
+            //if (pick.innerText.match("Positive")) {
+            //    positivepicks++;
+            //}
+            //if (pick.innerText.match("Negative")) {
+            //    negativepicks++;
+            //}
 
-            function OnSubmitValidate() {
-                if (positivepicks != 12 && negativepicks != 5) {
-                    swal('Error', 'Please Select Exactly 12 Positive and 5 Negative Traits', 'error')
-                    return false;
-                }
-                if (positivepicks != 12) {
-                    swal('Error', 'Please Select Exactly 12 Positive Traits', 'error')
-                    return false;
-                }
-                if (negative != 5) {
-                    swal('Error', 'Please Select Exactly 5 Negative Traits', 'error')
-                    return false;
-                }
-                else return true;
+            document.getElementById("title").innerText = "Positive: " + positivepicks + " Negative: " + negativepicks;
+
+
+        }
+
+        function OnSubmitValidate() {
+            if (positivepicks != 12 && negativepicks != 7) {
+                swal('Error', 'Please Select Exactly 12 Positive and 7 Negative Traits', 'error')
+                return false;
             }
-
-        </script>
-    }
-
-
-
+            if (positivepicks != 12) {
+                swal('Error', 'Please Select Exactly 12 Positive Traits', 'error')
+                return false;
+            }
+            if (negativepicks != 7) {
+                swal('Error', 'Please Select Exactly 7 Negative Traits', 'error')
+                return false;
+            }
+            else return true;
+        }
+    </script>
+}

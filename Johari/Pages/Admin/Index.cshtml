@@ -20,47 +20,62 @@
         <button type="submit" class="col-3 btn btn-primary form-control">Submit</button>
     </div>
 
-    @{ if (Model.clientObj.Clients.ClientID != 0)
-        {
-            <h3 style="text-align:center">@Model.clientObj.Clients.FirstName @Model.clientObj.Clients.LastName</h3>
-            <br />
-            <table id="johari_table" class="table table-bordered">
-                <tr>
-                    <th>Open Adjective Matches</th>
-                    <th>Blind Adjective Matches</th>
+    @if (Model.clientObj.Clients.ClientID != 0)
+    {
+        <h3 style="text-align:center">@Model.clientObj.Clients.FirstName @Model.clientObj.Clients.LastName</h3>
+        <br />
+        <table id="johari_table" class="table table-bordered">
+            <tr>
+                <th>Open Adjective Matches</th>
+                <th>Blind Adjective Matches</th>
 
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th>Hidden Adjective Matches</th>                    
-                    <th>Unknow Adjectives</th>
-                </tr>
-                <tr>
-                  
-                    <td>
+            </tr>
+            <tr>
+                <td>
+                    @{
+                        int count = 0;
 
-                        @for (int i = 0; i < Model.adjObj.HiddenList.Count(); i++)
+                        for (int i = 0; i < Model.adjObj.OpenList.Count(); i++)
                         {
-                            @Model.adjObj.HiddenList[i];
+                            for (int j = 0; j < Model.adjObj.OpenList.Count(); j++)
+                            {
+                                if (Model.adjObj.OpenList[i] == Model.adjObj.OpenList[j])
+                                {
+                                    count++;
+                                    Model.adjObj.OpenList.RemoveAt(j);
+                                }
+
+                            }
+
+                            if (count == 0)
+                            {
+                                @Model.adjObj.OpenList[i]
+                            }
+                            if (count == 1)
+                            {
+                                <b>@Model.adjObj.OpenList[i]</b>
+                            }
+                            if (count == 2)
+                            {
+                                <u><b>@Model.adjObj.OpenList[i]</b></u>
+                            }
+
+                            count = 0;
                         }
-
-                    </td>
-
-                    <td>
-
-                        @for (int i = 0; i < Model.adjObj.UnknownList.Count(); i++)
-                        {
-                            @Model.adjObj.UnknownList[i];
-                        }
-
-
-                    </td>
-                </tr>
-            </table>
-        }
+                    }
+                </td>
+                <td>@Model.blind</td>
+            </tr>
+            <tr>
+                <th>Hidden Adjective Matches</th>
+                <th>Unknown Adjectives</th>
+            </tr>
+            <tr>
+                <td>@Model.hidden</td>
+                <td>@Model.unknown</td>
+            </tr>
+        </table>
     }
+
 </form>
 
